@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="UserMacros">
+    <!-- internationalization (collation, formatting, transliteration, text boundary analysis) -->
+    <ICU4CinLibName>icuin</ICU4CinLibName>
+    <!-- Unicode-aware I/O (stream handling) -->
+    <ICU4CioLibName>icuio</ICU4CioLibName>
+    <!-- common core functionality (character conversion, normalization, string handling) -->
+    <ICU4CucLibName>icuuc</ICU4CucLibName>
+    <!-- ICU data library -->
+    <ICU4CdtLibName>icudt</ICU4CdtLibName>
+    <!-- Define a macro that can be used in project files to reference package directories -->
+    <ICU4CDir>$(MSBuildThisFileDirectory)</ICU4CDir>
+  </PropertyGroup>
+</Project>

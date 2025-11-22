@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>StoneSteps.ICU4C.VS2022.Dynamic</id>
+    <version>78.1.0</version>
+    <authors>The Unicode Consortium (contents)</authors>
+    <owners>Stone Steps (package)</owners>
+    <license type="file">LICENSE.txt</license>
+    <projectUrl>https://github.com/StoneStepsInc/icu4c-nuget</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>An ICU4C library for MSVC projects.</description>
+    <releaseNotes>
+Package Notes:
+
+ * This package was build from the allinone.sln solution in ICU4C, patched as described below
+ * The solution file was patched to compile with C++20, which makes char8_t methods available
+ * The solution is configured to reference the multi-threaded DLL CRT in the appropriate configurations
+
+See the ICU release notes about ICU changes.
+https://github.com/unicode-org/icu/releases/tag/release-78.1
+    </releaseNotes>
+    <copyright>Unicode, Inc</copyright>
+    <tags>ICU, ICU4C, Unicode, native, library</tags>
+  </metadata>
+  <files>
+   <file src="README.txt" target="" />
+   <file src="LICENSE.txt" target="LICENSE.txt" />
+   <file src="build\**\*" target="build" />
+</files>
+</package>

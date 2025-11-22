@@ -1,0 +1,11 @@
+--- a/source/allinone/Build.Windows.ProjectConfiguration.props	2025-10-30 13:37:19.000000000 -0400
++++ b/source/allinone/Build.Windows.ProjectConfiguration.props	2025-11-16 10:00:27.879596600 -0500
+@@ -97,7 +97,7 @@
+       <!-- Enable parallel compilation for faster builds. -->
+       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+       <!-- Set the C/C++ versions supported. -->
+-      <LanguageStandard Condition="'$(OverrideLanguageStandard)'==''">stdcpp17</LanguageStandard>
++      <LanguageStandard Condition="'$(OverrideLanguageStandard)'==''">stdcpp20</LanguageStandard>
+       <LanguageStandard Condition="'$(OverrideLanguageStandard)'!=''">$(OverrideLanguageStandard)</LanguageStandard>
+       <LanguageStandard_C>stdc11</LanguageStandard_C>
+     </ClCompile>

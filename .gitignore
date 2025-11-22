@@ -1,0 +1,28 @@
+# Visual Studio files
+/.vs/
+
+# ICU4C source
+/icu/
+/icu4c-*.zip
+
+# collected ICU4C build artifacts
+/nuget/build/native/include/
+/nuget/build/native/lib/
+/nuget/build/native/bin/
+/nuget/build/native/tools/
+/nuget/LICENSE.txt
+
+# locally-built Nuget package
+/StoneSteps.ICU4C.VS2022.Dynamic.*.nupkg
+
+# sample app for testing the Nuget package
+/sample-icu4c/.vs/
+/sample-icu4c/sample-icu4c.vcxproj.user
+/sample-icu4c/sample-icu4c-lib.vcxproj.user
+/sample-icu4c/x64/
+/sample-icu4c/packages/
+/sample-icu4c/packages.config
+# per-project package configuration (must be renamed manually)
+/sample-icu4c/packages.sample-icu4c.config
+/sample-icu4c/packages.sample-icu4c-lib.config
+

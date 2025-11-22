@@ -1,0 +1,143 @@
+#
+# The version part is immutable in the name, but the package revision
+# component after the dash should be kept in sync with `PKG_REV`.
+# GitHub doesn't allow variables in the workflow names, so this cannot
+# be automated.
+#
+# For new ICU4C versions, rename this file with a new version name
+# to restart build numbers from `1`. This is necessary because GitHub
+# maintains build numbers per workflow file name.
+#
+name: ICU4C v78.1.0
+
+#
+# When `publish-package` is set to `yes`, the workflow will build
+# the package and publish it to nuget.org. Otherwise, a package
+# will be built as an artifact and may be downloaded via GitHub UI.
+#
+# Published Nuget package will use the 4th version component as a
+# package revision number because Nuget lacks package revision
+# support.
+#
+# Without publishing, a Nuget package will be uploaded as a workflow
+# artifact and will be named using a pre-release version, which is
+# an unfortunate workaround for a lack of build promotion support
+# between GitHub and Nuget. This means that true pre-release packages
+# will conflict with CI packages, but for this repository this is
+# not an issue that will ever need to be addressed.
+#
+on:
+  workflow_dispatch:
+    inputs:
+      publish-package:
+        description: Publish Nuget Package (yes/no)?
+        required: false
+
+#
+# For each new ICU4C release, change these variables:
+#
+#   * PKG_VER
+#
+# For each change in `PKG_VER`, `PKG_REV` must be reset to `1` (one).
+#
+# Package revision should be incremented by one every time package
+# content is changed in any way, such as changing compiler options,
+# adding or removing files, changing any text in README files, etc.
+#
+env:
+  PKG_VER: '78.1.0'
+  PKG_VER_ABBR: '78.1'
+  PKG_REV: 1
+
+  ICU4C_DNAME: icu
+  ICU4C_URL_BASE: 'https://github.com/unicode-org/icu/releases/download'
+
+  BUILD_NUMBER: ${{ github.run_number }}
+
+  ICU4C_SHA256: fe027bcd7e52ab3f3bbbb2d5e9ff9c674e94bbe671bb6a8f58719f27485864da
+
+  # for VS Community Edition, replace `Enterprise` with `Community` in the path
+  VCVARSALL: 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall'
+
+  # Nuget Gallery (www.nuget.org) publish URL
+  NUGET_PUB_URL: https://api.nuget.org/v3/index.json
+
+defaults:
+  run:
+    shell: cmd
+
+jobs:
+  build-icu4c:
+    name: Build ICU4C
+    runs-on: windows-2022
+    env:
+      ICU4C_FNAME: icu4c-${{ env.PKG_VER_ABBR }}-sources.zip
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Download ICU4C
+      run: |
+        curl --location --remote-name ${{ env.ICU4C_URL_BASE }}/release-${{ env.PKG_VER_ABBR }}/${{ env.ICU4C_FNAME }}
+
+    - name: Verify ICU4C checksum
+      run: 7z h -scrcSHA256 ${{ env.ICU4C_FNAME }} | findstr /C:"SHA256 for data" | call devops\check-sha256 "${{ env.ICU4C_SHA256 }}"
+
+    - name: Extract ICU4C
+      run: |
+        7z x ${{ env.ICU4C_FNAME }}
+
+    - name: Patch ICU4C
+      working-directory: ${{ env.ICU4C_DNAME }}
+      run: |
+        patch --unified --strip=1 --input=..\patches\01-stdcpp20.patch
+
+    - name: Build x64/Release
+      working-directory: ${{ env.ICU4C_DNAME }}
+      run: |
+        call "${{ env.VCVARSALL }}" x64
+        mkdir Release
+        msbuild source\allinone\allinone.sln /p:Configuration=Release /p:Platform=x64 /p:SkipUWP=true
+
+    - name: Build x64/Debug
+      working-directory: ${{ env.ICU4C_DNAME }}
+      run: |
+        call "${{ env.VCVARSALL }}" x64
+        mkdir Debug
+        msbuild source\allinone\allinone.sln /p:Configuration=Debug /p:Platform=x64 /p:SkipUWP=true
+
+    - name: Collect build artifacts
+      run: |
+        call devops\collect-artifacts.bat "${{ env.ICU4C_DNAME }}"
+
+    - name: Clean up
+      run: |
+        call devops\clean-nuget.bat
+
+      # this is an unconventional use of the pre-release version - see README.md
+    - name: Make CI Nuget package
+      if: ${{ github.event.inputs.publish-package != 'yes' }}
+      run: |
+        nuget pack nuget\StoneSteps.ICU4C.VS2022.Dynamic.nuspec -Suffix "ci.${{ env.BUILD_NUMBER }}" -Version ${{ env.PKG_VER }}.${{ env.PKG_REV }}
+
+    - name: Upload CI Nuget package
+      if: ${{ github.event.inputs.publish-package != 'yes' }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: ICU4C CI Nuget package
+        path: StoneSteps.ICU4C.VS2022.Dynamic.${{ env.PKG_VER }}.${{ env.PKG_REV }}-ci.${{ env.BUILD_NUMBER }}.nupkg
+
+      #
+      # Use `-Version` explicitly to override the version in the manifest,
+      # so we can usurp the 4th version component for the package revision.
+      #
+    - name: Make Nuget package
+      if: ${{ github.event.inputs.publish-package == 'yes' }}
+      run: |
+        nuget pack nuget\StoneSteps.ICU4C.VS2022.Dynamic.nuspec -Version ${{ env.PKG_VER }}.${{ env.PKG_REV }}
+
+    - name: Publish Nuget package
+      if: ${{ github.event.inputs.publish-package == 'yes' }}
+      run: |
+        nuget push StoneSteps.ICU4C.VS2022.Dynamic.${{ env.PKG_VER }}.${{ env.PKG_REV }}.nupkg -Source ${{ env.NUGET_PUB_URL }} -ApiKey "${{ secrets.NUGET_API_KEY }}" -NonInteractive

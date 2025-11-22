@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- 
+  For static library projects, having import libraries in the item
+  tree will only clutter the view and add no value. Avoid adding
+  packaged import libraries into static library projects.
+  -->
+  <ItemGroup Condition="'$(ConfigurationType)' != 'StaticLibrary'">
+    <!--
+    All libraries will appear in the Visual Studio project, but only
+    configuration-appropriate ones will be included in the build,
+    based on whether the selected configuration is set as a debug or
+    a release configuration, as indicated by UseDebugLibraries, which
+    is available in all standard Visual Studio projects.
+
+    UseDebugLibraries is described in {VS2022}\Msbuild\Microsoft\VC\v170\1033\general_advanced.xml
+    -->
+    <Library Include="$(ICU4CDir)lib\$(Platform)\Debug\$(ICU4CinLibName)d.lib">
+      <ExcludedFromBuild Condition="!$(UseDebugLibraries)">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="$(ICU4CDir)lib\$(Platform)\Release\$(ICU4CinLibName).lib">
+      <ExcludedFromBuild Condition="$(UseDebugLibraries)">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="$(ICU4CDir)lib\$(Platform)\Debug\$(ICU4CioLibName)d.lib">
+      <ExcludedFromBuild Condition="!$(UseDebugLibraries)">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="$(ICU4CDir)lib\$(Platform)\Release\$(ICU4CioLibName).lib">
+      <ExcludedFromBuild Condition="$(UseDebugLibraries)">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="$(ICU4CDir)lib\$(Platform)\Debug\$(ICU4CucLibName)d.lib">
+      <ExcludedFromBuild Condition="!$(UseDebugLibraries)">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="$(ICU4CDir)lib\$(Platform)\Release\$(ICU4CucLibName).lib">
+      <ExcludedFromBuild Condition="$(UseDebugLibraries)">true</ExcludedFromBuild>
+    </Library>
+    <!-- all configurations use the release data DLL -->
+    <Library Include="$(ICU4CDir)lib\$(Platform)\Release\$(ICU4CdtLibName).lib" />
+  </ItemGroup>
+  <!-- copy all DLLs and PDBs into the project output directory after a successful build -->
+  <Target Name="CopyICUBinaries" AfterTargets="Build" Condition="'$(ConfigurationType)' != 'StaticLibrary'">
+    <ItemGroup>
+      <ICUBinaries Include="$(ICU4CDir)bin\$(Platform)\$(Configuration)\*.dll" />
+      <ICUBinaries Include="$(ICU4CDir)bin\$(Platform)\$(Configuration)\*.pdb" />
+    </ItemGroup>
+    <Copy SourceFiles="@(ICUBinaries)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
+  </Target>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ICU4CDir)include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+</Project>

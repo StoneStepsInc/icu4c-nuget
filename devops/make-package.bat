@@ -56,18 +56,20 @@ rem
 call "%VCVARSALL%" x64
 
 rem
-rem Release
-rem
-mkdir Release
-
-msbuild source\allinone\allinone.sln /p:Configuration=Release /p:Platform=x64 /p:SkipUWP=true
-
-rem
 rem Debug
 rem
 mkdir Debug
 
 msbuild source\allinone\allinone.sln /p:Configuration=Debug /p:Platform=x64 /p:SkipUWP=true
+
+rem
+rem Release
+rem
+rem Must be the last configuration to be built because it generates the actual data DLL.
+rem
+mkdir Release
+
+msbuild source\allinone\allinone.sln /p:Configuration=Release /p:Platform=x64 /p:SkipUWP=true
 
 rem
 rem Create a Nuget package

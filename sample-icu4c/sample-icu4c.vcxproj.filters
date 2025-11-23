@@ -14,27 +14,4 @@
       <UniqueIdentifier>{98eee772-de17-4b0b-8396-82185d7fa7b4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
-  <ItemGroup>
-    <Library Include="$(ICU4CDir)lib\$(Platform)\Debug\$(ICU4CucLibName)d.lib">
-      <Filter>lib\Debug</Filter>
-    </Library>
-    <Library Include="$(ICU4CDir)lib\$(Platform)\Debug\$(ICU4CioLibName)d.lib">
-      <Filter>lib\Debug</Filter>
-    </Library>
-    <Library Include="$(ICU4CDir)lib\$(Platform)\Debug\$(ICU4CinLibName)d.lib">
-      <Filter>lib\Debug</Filter>
-    </Library>
-    <Library Include="$(ICU4CDir)lib\$(Platform)\Release\$(ICU4CinLibName).lib">
-      <Filter>lib\Release</Filter>
-    </Library>
-    <Library Include="$(ICU4CDir)lib\$(Platform)\Release\$(ICU4CioLibName).lib">
-      <Filter>lib\Release</Filter>
-    </Library>
-    <Library Include="$(ICU4CDir)lib\$(Platform)\Release\$(ICU4CucLibName).lib">
-      <Filter>lib\Release</Filter>
-    </Library>
-    <Library Include="$(ICU4CDir)lib\$(Platform)\Release\$(ICU4CdtLibName).lib">
-      <Filter>lib</Filter>
-    </Library>
-  </ItemGroup>
 </Project>

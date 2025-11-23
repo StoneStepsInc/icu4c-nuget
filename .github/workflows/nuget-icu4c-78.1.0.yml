@@ -100,14 +100,18 @@ jobs:
         mkdir Debug
         msbuild source\allinone\allinone.sln /p:Configuration=Debug /p:Platform=x64 /p:SkipUWP=true
 
-      #
-      # Must be the last configuration to be built because it generates the actual data DLL.
-      #
     - name: Build x64/Release
       working-directory: ${{ env.ICU4C_DNAME }}
       run: |
         call "${{ env.VCVARSALL }}" x64
         mkdir Release
+        msbuild source\allinone\allinone.sln /p:Configuration=Release /p:Platform=x64 /p:SkipUWP=true
+
+      # run the release build again to generate the actual data DLL (requires all the tools built first)
+    - name: Build data DLL
+      working-directory: ${{ env.ICU4C_DNAME }}
+      run: |
+        call "${{ env.VCVARSALL }}" x64
         msbuild source\allinone\allinone.sln /p:Configuration=Release /p:Platform=x64 /p:SkipUWP=true
 
     - name: Collect build artifacts

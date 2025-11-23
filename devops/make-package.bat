@@ -66,10 +66,11 @@ msbuild source\allinone\allinone.sln /p:Configuration=Debug /p:Platform=x64 /p:S
 rem
 rem Release
 rem
-rem Must be the last configuration to be built because it generates the actual data DLL.
-rem
 mkdir Release
 
+msbuild source\allinone\allinone.sln /p:Configuration=Release /p:Platform=x64 /p:SkipUWP=true
+
+rem run the release build again to generate the actual data DLL (requires all the tools built first)
 msbuild source\allinone\allinone.sln /p:Configuration=Release /p:Platform=x64 /p:SkipUWP=true
 
 cd ..

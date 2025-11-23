@@ -41,6 +41,8 @@
     <ItemGroup>
       <ICUBinaries Include="$(ICU4CDir)bin\$(Platform)\$(Configuration)\*.dll" />
       <ICUBinaries Include="$(ICU4CDir)bin\$(Platform)\$(Configuration)\*.pdb" />
+      <!-- all configurations use the release data DLL (with a pattern we don't have to figure out the major version number) -->
+      <ICUBinaries Include="$(ICU4CDir)bin\$(Platform)\Release\$(ICU4CdtLibName)*.dll" />
     </ItemGroup>
     <Copy SourceFiles="@(ICUBinaries)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
   </Target>

@@ -13,7 +13,7 @@ set PKG_REV=%~1
 
 set ICU4C_FNAME=icu4c-%PKG_VER_ABBR%-sources.zip
 set ICU4C_DNAME=icu
-set ICU4C_URL_BASE=https://github.com/unicode-org/icu/releases/download/release-%PKG_VER_ABBR%
+set ICU4C_URL_BASE=https://github.com/unicode-org/icu/releases/download
 
 rem original ICU MD5 hash: d143e2f3bab1aef0ebcae97fd6c6dcce
 set ICU4C_SHA256=fe027bcd7e52ab3f3bbbb2d5e9ff9c674e94bbe671bb6a8f58719f27485864da
@@ -31,7 +31,7 @@ rem Download and extract the source
 rem
 
 if NOT EXIST %ICU4C_FNAME% (
-  curl --location --remote-name %ICU4C_URL_BASE%/%ICU4C_FNAME%
+  curl --location --remote-name %ICU4C_URL_BASE%/release-%PKG_VER_ABBR%/%ICU4C_FNAME%
 )
 
 "%SEVENZIP_EXE%" h -scrcSHA256 %ICU4C_FNAME% | findstr /C:"SHA256 for data" | call devops\check-sha256 "%ICU4C_SHA256%"

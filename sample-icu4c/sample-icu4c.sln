@@ -8,7 +8,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sample-icu4c", "sample-icu4
 		{C5BD3483-DBFA-4C4E-A95A-2157BAAAC9DD} = {C5BD3483-DBFA-4C4E-A95A-2157BAAAC9DD}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sample-icu4c-lib", "sample-icu4c-lib.vcxproj", "{C5BD3483-DBFA-4C4E-A95A-2157BAAAC9DD}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sample-icu4c-lib", "lib\sample-icu4c-lib.vcxproj", "{C5BD3483-DBFA-4C4E-A95A-2157BAAAC9DD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

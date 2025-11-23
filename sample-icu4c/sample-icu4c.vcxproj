@@ -83,7 +83,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="sample-icu4c-lib.vcxproj">
+    <ProjectReference Include="lib\sample-icu4c-lib.vcxproj">
       <Project>{c5bd3483-dbfa-4c4e-a95a-2157baaac9dd}</Project>
     </ProjectReference>
   </ItemGroup>

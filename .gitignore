@@ -18,11 +18,9 @@
 # sample app for testing the Nuget package
 /sample-icu4c/.vs/
 /sample-icu4c/sample-icu4c.vcxproj.user
-/sample-icu4c/sample-icu4c-lib.vcxproj.user
+/sample-icu4c/lib/sample-icu4c-lib.vcxproj.user
 /sample-icu4c/x64/
 /sample-icu4c/packages/
 /sample-icu4c/packages.config
-# per-project package configuration (must be renamed manually)
-/sample-icu4c/packages.sample-icu4c.config
-/sample-icu4c/packages.sample-icu4c-lib.config
+/sample-icu4c/lib/packages.config
 

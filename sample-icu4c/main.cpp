@@ -1,4 +1,4 @@
-#include "sample-icu4c-lib.h"
+#include "lib/sample-icu4c-lib.h"
 
 #include <unicode/uclean.h>
 #include <unicode/udata.h>
@@ -61,7 +61,7 @@ struct coll_less_t {
 
       // may return U_USING_FALLBACK_WARNING if the exact locale is not available
       if(status != U_ZERO_ERROR && !collator)
-         throw std::runtime_error(std::format("Cannot create a collator {:d}", static_cast<int>(status)));
+         throw std::runtime_error(std::format("Cannot create a collator ({:s})", u_errorName(status)));
 
       if(status == U_USING_FALLBACK_WARNING) {
          status = U_ZERO_ERROR;
@@ -69,7 +69,7 @@ struct coll_less_t {
          icu::Locale actual_locale = collator->getLocale(ULOC_ACTUAL_LOCALE, status);
 
          if(status != U_ZERO_ERROR)
-            throw std::runtime_error(std::format("Cannot query the actual collator locale {:d}", static_cast<int>(status)));
+            throw std::runtime_error(std::format("Cannot query the actual collator locale ({:s})", u_errorName(status)));
 
          puts(std::format("Using the fallback locale \"{:s}\" in the collator", actual_locale.getName()).c_str());
       }
@@ -77,7 +77,7 @@ struct coll_less_t {
       collator->setAttribute(UCOL_STRENGTH, UCOL_TERTIARY, status);
 
       if(status != U_ZERO_ERROR)
-         throw std::runtime_error(std::format("Cannot set the collator strength {:d}", static_cast<int>(status)));
+         throw std::runtime_error(std::format("Cannot set the collator strength ({:s})", u_errorName(status)));
    }
 
    bool operator () (const std::u8string& a, const std::u8string& b) const
@@ -90,9 +90,9 @@ struct coll_less_t {
             icu::StringPiece(b.c_str(), static_cast<uint32_t>(b.length())), status);
 
       if(status != U_ZERO_ERROR)
-         throw std::runtime_error(std::format("Cannot collate strings \"{:s}\" and \"{:s}\" ({:d})",
+         throw std::runtime_error(std::format("Cannot collate strings \"{:s}\" and \"{:s}\" ({:s})",
                            reinterpret_cast<const char*>(a.c_str()),
-                           reinterpret_cast<const char*>(b.c_str()), static_cast<int>(status)));
+                           reinterpret_cast<const char*>(b.c_str()), u_errorName(status)));
 
       return result == UCOL_LESS;
    }
@@ -143,7 +143,7 @@ int main(void)
       u_init(&status);
 
       if(status != U_ZERO_ERROR)
-         throw std::runtime_error(std::format("Cannot initialize ICU {:d}", static_cast<int>(status)));
+         throw std::runtime_error(std::format("Cannot initialize ICU4C ({:s})", u_errorName(status)));
 
       string_eval_test();
 

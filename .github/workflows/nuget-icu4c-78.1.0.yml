@@ -110,10 +110,6 @@ jobs:
       run: |
         call devops\collect-artifacts.bat "${{ env.ICU4C_DNAME }}"
 
-    - name: Clean up
-      run: |
-        call devops\clean-nuget.bat
-
       # this is an unconventional use of the pre-release version - see README.md
     - name: Make CI Nuget package
       if: ${{ github.event.inputs.publish-package != 'yes' }}

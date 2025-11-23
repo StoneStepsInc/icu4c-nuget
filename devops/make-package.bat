@@ -9,6 +9,7 @@ if "%~1" == "" (
 
 set PKG_VER=78.1.0
 set PKG_VER_ABBR=78.1
+set PKG_VER_MAJOR=78
 set PKG_REV=%~1
 
 set ICU4C_FNAME=icu4c-%PKG_VER_ABBR%-sources.zip
@@ -71,12 +72,16 @@ mkdir Release
 
 msbuild source\allinone\allinone.sln /p:Configuration=Release /p:Platform=x64 /p:SkipUWP=true
 
+cd ..
+
+rem
+rem Collect artifacts
+rem
+
+call devops\collect-artifacts.bat "%ICU4C_DNAME%" "%PKG_VER_MAJOR%"
+
 rem
 rem Create a Nuget package
 rem
-
-cd ..
-
-call devops\collect-artifacts.bat "%ICU4C_DNAME%"
 
 nuget pack nuget\StoneSteps.ICU4C.VS2022.Dynamic.nuspec -Version %PKG_VER%.%PKG_REV%

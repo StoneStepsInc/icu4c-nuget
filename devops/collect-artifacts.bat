@@ -3,32 +3,41 @@
 setlocal
 
 if "%~1" == "" (
-  echo ICU4C source directory must be provided as the first argument
+  echo ICU4C source directory must be provided as the 1st argument
+  goto :EOF
+)
+
+if "%~2" == "" (
+  echo ICU4C major version number must be provided as the 2nd argument
   goto :EOF
 )
 
 set ICU_DNAME=%~1
+set ICU_VER_MAJOR=%~2
 
 mkdir nuget\build\native\include\unicode
 copy /Y %ICU_DNAME%\include\unicode\*.h nuget\build\native\include\unicode
 
 mkdir nuget\build\native\bin\x64\Release
-copy /Y %ICU_DNAME%\bin64\icuin78.dll nuget\build\native\bin\x64\Release
-copy /Y %ICU_DNAME%\bin64\icuio78.dll nuget\build\native\bin\x64\Release
-copy /Y %ICU_DNAME%\bin64\icuuc78.dll nuget\build\native\bin\x64\Release
+copy /Y %ICU_DNAME%\bin64\icuin%ICU_VER_MAJOR%.dll nuget\build\native\bin\x64\Release
+copy /Y %ICU_DNAME%\bin64\icuio%ICU_VER_MAJOR%.dll nuget\build\native\bin\x64\Release
+copy /Y %ICU_DNAME%\bin64\icuuc%ICU_VER_MAJOR%.dll nuget\build\native\bin\x64\Release
 rem only release builds produce an actual data DLL (the one in debug builds is a 3K stub)
-copy /Y %ICU_DNAME%\bin64\icudt78.dll nuget\build\native\bin\x64\Release
+copy /Y %ICU_DNAME%\bin64\icudt%ICU_VER_MAJOR%.dll nuget\build\native\bin\x64\Release
+rem only required to run ICU4C tools, which are built in release builds
+copy /Y %ICU_DNAME%\bin64\icutu%ICU_VER_MAJOR%.dll nuget\build\native\bin\x64\Release
+
+copy /Y %ICU_DNAME%\bin64\*.exe nuget\build\native\bin\x64\Release
+rem delete the test binaries we picked up above
+del /Q nuget\build\native\bin\x64\Release\icutest*.exe
 
 mkdir nuget\build\native\bin\x64\Debug
-copy /Y %ICU_DNAME%\bin64\icuin78d.dll nuget\build\native\bin\x64\Debug
-copy /Y %ICU_DNAME%\bin64\icuio78d.dll nuget\build\native\bin\x64\Debug
-copy /Y %ICU_DNAME%\bin64\icuuc78d.dll nuget\build\native\bin\x64\Debug
+copy /Y %ICU_DNAME%\bin64\icuin%ICU_VER_MAJOR%d.dll nuget\build\native\bin\x64\Debug
+copy /Y %ICU_DNAME%\bin64\icuio%ICU_VER_MAJOR%d.dll nuget\build\native\bin\x64\Debug
+copy /Y %ICU_DNAME%\bin64\icuuc%ICU_VER_MAJOR%d.dll nuget\build\native\bin\x64\Debug
 
 rem copy the data file in case anyone wants to repackage it
-copy /Y %ICU_DNAME%\source\data\out\*.dat nuget\build\native\bin
-
-mkdir nuget\build\native\tools
-copy /Y %ICU_DNAME%\bin64\*.exe nuget\build\native\tools
+copy /Y %ICU_DNAME%\source\data\out\icudt%ICU_VER_MAJOR%l.dat nuget\build\native\bin
 
 mkdir nuget\build\native\lib\x64\Release
 copy /Y %ICU_DNAME%\lib64\icudt.lib nuget\build\native\lib\x64\Release

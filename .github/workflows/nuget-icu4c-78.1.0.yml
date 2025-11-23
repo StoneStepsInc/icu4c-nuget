@@ -47,6 +47,7 @@ on:
 env:
   PKG_VER: '78.1.0'
   PKG_VER_ABBR: '78.1'    # also in ICU4C_FNAME
+  PKG_VER_MAJOR: '78'
   PKG_REV: 1
 
   ICU4C_DNAME: icu
@@ -111,7 +112,7 @@ jobs:
 
     - name: Collect build artifacts
       run: |
-        call devops\collect-artifacts.bat "${{ env.ICU4C_DNAME }}"
+        call devops\collect-artifacts.bat "${{ env.ICU4C_DNAME }}" "${{ env.PKG_VER_MAJOR }}"
 
       # this is an unconventional use of the pre-release version - see README.md
     - name: Make CI Nuget package
